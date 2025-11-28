@@ -2,5 +2,5 @@
 
 - Your student ID: 2410299
 - Your name: Nguyễn Xuân Hiển
-- Your class: ICT2
+- Your class: ICT-DD
 
