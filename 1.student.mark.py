@@ -14,31 +14,28 @@ def input_courses():
     for i in range (course_amt):
         course_id = input(f"Input ID of course {i}: ")
         course_name = input(f"Input name of course {i}: ")
-        courses.append(m_dict(course_id, course_name))
+        courses.append(c_dict(course_id, course_name))
     return courses
+def input_marks():
+    global students, courses
+    marks = []
+    cont = "y"
+    while cont == "y":
+        s_id = input("Input student ID to give marks for: ")
+        c_id = input("Input course ID to give marks for: ")
+        mark = float(input(f"Input mark: "))
+        marks.append(m_dict(s_id, c_id, mark))
+        cont = input("Continue inputting marks? (y/n): ")
+    return marks
 def list_students():
     for i in range (len(students)):
-        print(students[i]) # the print command automatically inserts newline at end
+        print(students[i])
 def list_courses():
     for i in range (len(courses)):
         print(courses[i])
-def input_marks():
-    global students, courses
-    marks = {}
-    for s in students:
-        s_id = s["id"]
-        marks[s_id] = {}
-        for c in courses:
-            c_id = c["id"]
-            marks[s_id][c_id] = "X" # placeholder value
-    cont = "y"
-    while (cont == "y"):
-        course = input("Input course ID to give marks: ")
-        student = input("Input student ID to give marks: ")
-        mark = float(input("Input mark: "))
-        marks[s_id][c_id] = mark
-        cont = input("Continue inputting marks? (y/n): ")
-    return marks
+def list_marks():
+    for i in range (len(marks)):
+        print(marks[i])
 # some functions for quick sample input (for code testing purposes)
 def s_dict(id, name, dob):
     return {"id": id, "name": name, "dob": dob}
@@ -50,8 +47,7 @@ def testinput():
     global students, courses, marks
     students = [s_dict("123", "Hien", "2006-02-24"), s_dict("456", "Khoa", "1980-05-11")]
     courses = [c_dict("m1", "math"), c_dict("p2", "physics"), c_dict("i3", "informatics")]
-    marks = [m_dict()] # not done with this yet...
-    
+    marks = [m_dict("123", "m1", "15"), m_dict("123", "p2", "16"), m_dict("456", "p2", "18")]
 # main code
 students = input_students()
 courses = input_courses()
@@ -61,3 +57,4 @@ list_students()
 print("Listing courses... ")
 list_courses()
 print("Listing marks...")
+list_marks()
