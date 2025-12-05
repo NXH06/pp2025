@@ -1,7 +1,11 @@
 # functions
 def input_students():
     global students
-    student_amt = int(input("Input amount of students: "))
+    while True:
+        student_amt = int(input("Input amount of students: "))
+        if student_amt >= 0:
+            break
+        print("Invalid amount of students!")
     for i in range (student_amt):
         student_id = input(f"Input ID of student {i + 1}: ") # Avoid zero-indexing while printing
         student_name = input(f"Input name of student {i + 1}: ")
@@ -9,7 +13,11 @@ def input_students():
         students.append(s_dict(student_id, student_name, student_dob))
 def input_courses():
     global courses
-    course_amt = int(input("Input amount of courses: "))
+    while True:
+        course_amt = int(input("Input amount of courses: "))
+        if course_amt >= 0:
+            break
+        print("Invalid amount of courses!")
     for i in range (course_amt):
         course_id = input(f"Input ID of course {i + 1}: ")
         course_name = input(f"Input name of course {i + 1}: ")
@@ -25,14 +33,27 @@ def init_marks(): # make 2D table of marks, all filled with placeholder values
     return marks
 def input_marks():
     global marks
+    list_courses()
     if students == [] or courses == []:
         print("Input students and courses before inputting marks!")
         return
     if marks == {}:
         marks = init_marks()
-    c_id = input("Input course ID to give marks: ")
-    s_id = input("Input student ID to give marks: ")
-    mark = float(input("Input mark: "))
+    while True:
+        c_id = input("Input course ID to give marks: ")
+        if any(c_id == c["id"] for c in courses): # bool "any" returns True if any element in iterable object is true
+            break
+        print("Course not found!")
+    while True:
+        s_id = input("Input student ID to give marks: ")
+        if any(s_id == s["id"] for s in students):
+            break
+        print("Student not found!")
+    while True:
+        mark = float(input("Input mark: "))
+        if mark >= 0 and mark <= 20:
+            break
+        print("Mark must be in range 0-20!")
     m_dict(s_id, c_id, mark)
 def list_students():
     if students == []:
@@ -82,7 +103,7 @@ students = []
 courses = []
 marks = {}
 print("> Student Management Program <")
-print("===== MENU =====")
+print("====== MENU ======")
 while True:
     print("1. Input students")
     print("2. Input courses")
@@ -92,7 +113,7 @@ while True:
     print("6. List marks")
     print("7. Create sample input (for quick testing)")
     print("0. Exit program")
-    print("================")
+    print("==================")
     action = int(input("> What would you like to do?: "))
     # Python doesn't have a built-in switch-case statement :|
     # Note: for actions 7, all lists/dicts are wiped clean and reinit'd. Don't use this if you already used 1, 2 or 3
@@ -110,11 +131,13 @@ while True:
         list_marks()
     elif action == 7:
         testinput()
-    else: # if input is 0 or anything else
+    elif action == 0:
         break
+    else:
+        print("Not a valid action. Please try again.")
+    print("==================")
 print("> Program terminated.")
 
 # TODO:
-# Validate input type/value for all inputs so program won't quit prematurely
 # Input marks for all students instead of just 1 when selecting a course?
 # When displaying marks, print actual names for students and courses instead of IDs
