@@ -1,3 +1,4 @@
+from prettytable import PrettyTable
 # functions
 def input_students():
     global students
@@ -7,10 +8,11 @@ def input_students():
             break
         print("Invalid amount of students!")
     for i in range (student_amt):
-        student_id = input(f"Input ID of student {i + 1}: ") # Avoid zero-indexing while printing
-        student_name = input(f"Input name of student {i + 1}: ")
-        student_dob = input(f"Input date of birth (YYYY-MM-dd) of student {i + 1}: ")
-        students.append(s_dict(student_id, student_name, student_dob))
+        print(f"Input information for student {i+1}...") # Avoid zero-indexing while printing
+        s_id = input("ID: ").strip().upper()
+        s_name = input("Name: ")
+        s_dob = input("Date of birth (dd-MM-YYYY): ")
+        students.append(s_dict(s_id, s_name, s_dob))
 def input_courses():
     global courses
     while True:
@@ -19,9 +21,10 @@ def input_courses():
             break
         print("Invalid amount of courses!")
     for i in range (course_amt):
-        course_id = input(f"Input ID of course {i + 1}: ")
-        course_name = input(f"Input name of course {i + 1}: ")
-        courses.append(c_dict(course_id, course_name))
+        print(f"Input information for course {i+1}...") # Avoid zero-indexing while printing
+        c_id = input("ID: ").strip().upper()
+        c_name = input("Name: ")
+        courses.append(c_dict(c_id, c_name))
 def init_marks(): # make 2D table of marks, all filled with placeholder values
     global marks
     for s in students:
@@ -33,7 +36,7 @@ def init_marks(): # make 2D table of marks, all filled with placeholder values
     return marks
 def input_marks():
     global marks
-    list_courses()
+    display_courses()
     if students == [] or courses == []:
         print("Input students and courses before inputting marks!")
         return
@@ -44,38 +47,55 @@ def input_marks():
         if any(c_id == c["id"] for c in courses): # bool "any" returns True if any element in iterable object is true
             break
         print("Course not found!")
-    while True:
-        s_id = input("Input student ID to give marks: ")
-        if any(s_id == s["id"] for s in students):
-            break
-        print("Student not found!")
-    while True:
-        mark = float(input("Input mark: "))
-        if mark >= 0 and mark <= 20:
-            break
-        print("Mark must be in range 0-20!")
-    m_dict(s_id, c_id, mark)
-def list_students():
+    for s in students:
+        while True:
+            mark = input(f"Input mark for {s["name"]} ({s["id"]}): ")
+            if mark == "x":
+                print("Student skipped.")
+                break
+            mark = float(mark)
+            if mark >= 0 and mark <= 20:
+                m_dict(s["id"], c_id, mark)
+                break
+            print("Mark must be in range 0-20!")
+def display_students():
     if students == []:
-        print("Students list is currently empty.")
+        print("Students display is currently empty.")
         return
-    print("> Listing students... ")
-    for i in range (len(students)):
-        print(students[i]) # the print command automatically inserts newline at end
-def list_courses():
+    print("> Displaying students...\n")
+    print("ID\t | Name\t\t | Date of birth") # the print command automatically inserts newline at end
+    print("-" * 40) # printing a neat table
+    for s in students:
+        print(f"{s["id"]}\t | {s["name"]}\t\t | {s["dob"]}") 
+def display_courses():
     if courses == []:
-        print("Courses list is currently empty.")
+        print("Courses display is currently empty.")
         return
-    print("> Listing courses... ")
-    for i in range (len(courses)):
-        print(courses[i])
-def list_marks():
+    print("> Displaying courses...\n")
+    print("ID\t | Name")
+    print("-" * 30)
+    for c in courses:
+        print(f"{c["id"]}\t | {c["name"]}")
+def display_marks():
     if marks == {}:
-        print("Marks list is currently empty.")
+        print("Marks display is currently empty.")
         return
-    print("> Listing marks...")
-    for student in marks:
-        print(f"{student}: {marks[student]}")
+    print("> Displaying marks...\n")
+    for s in marks:
+        s_name = [i["name"] for i in students if i["id"] == s] # iterate through [students] for matching id, then return name
+        print(f"{s_name}: {marks[s]}")
+    """ Manual method: (just use a table maker library instead)
+    print("Student\t\t", end = "")
+    for c in courses:
+        print(f" | {c["name"]}\t", end = "") 
+    print("\n" + "-" * 50)
+    for s, c in marks.items(): # outer key, inner dict, outer dict
+        s_name = [i["name"] for i in students if i["id"] == s]
+        print(f"{s_name}\t", end = "")
+        for m in c: # inner key, inner dict
+            print(f" | {c[m]}\t", end = "")
+        print("") # insert newline before printing next student
+    """
 # Functions for speeding up work with dictionaries
 def s_dict(id, name, dob):
     return {"id": id, "name": name, "dob": dob}
@@ -91,7 +111,7 @@ def testinput():
         print("Cannot use sample input since there is already data in [students] or [courses].")
         return
     print("> Creating sample input...")
-    students = [s_dict("123", "Hien", "2006-02-24"), s_dict("456", "Khoa", "1980-05-11")]
+    students = [s_dict("123", "Hien", "24-02-2006"), s_dict("456", "Khoa", "11-05-1980")]
     courses = [c_dict("m1", "math"), c_dict("p2", "physics"), c_dict("i3", "informatics")]
     marks = init_marks()
     m_dict("123", "m1", 15.5)
@@ -103,39 +123,38 @@ students = []
 courses = []
 marks = {}
 print("> Student Management Program <")
-print("====== MENU ======")
 while True:
+    print("\n====== MENU ======")
     print("1. Input students")
     print("2. Input courses")
     print("3. Input marks")
-    print("4. List students")
-    print("5. List courses")
-    print("6. List marks")
+    print("4. Display students")
+    print("5. Display courses")
+    print("6. Display marks")
     print("7. Create sample input (for quick testing)")
     print("0. Exit program")
     print("==================")
-    action = int(input("> What would you like to do?: "))
+    action = input("> What would you like to do?: ").strip()
     # Python doesn't have a built-in switch-case statement :|
-    # Note: for actions 7, all lists/dicts are wiped clean and reinit'd. Don't use this if you already used 1, 2 or 3
-    if action == 1:
+    # Note: for actions 7, all displays/dicts are wiped clean and reinit'd. Don't use this if you already used 1, 2 or 3
+    if action == "1":
         input_students()
-    elif action == 2:
+    elif action == "2":
         input_courses()
-    elif action == 3:
+    elif action == "3":
         input_marks()
-    elif action == 4:
-        list_students()
-    elif action == 5:
-        list_courses()
-    elif action == 6:
-        list_marks()
-    elif action == 7:
+    elif action == "4":
+        display_students()
+    elif action == "5":
+        display_courses()
+    elif action == "6":
+        display_marks()
+    elif action == "7":
         testinput()
-    elif action == 0:
+    elif action == "0":
         break
     else:
         print("Not a valid action. Please try again.")
-    print("==================")
 print("> Program terminated.")
 
 # TODO:
