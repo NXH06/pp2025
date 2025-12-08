@@ -1,26 +1,40 @@
-# TODO: apply encapsulation everywhere (public/protected/private)
 # functions
 class Student:
     def __init__(self, id, name, dob): # call this function using class name
-            self.id = id
-            self.name = name
-            self.dob = dob
+            self.__id = id
+            self.__name = name
+            self.__dob = dob
     @classmethod
     def empty(cls):
         return cls("", "", "")
+    @property
+    def id(self):
+        return self.__id
+    @property
+    def name(self):
+        return self.__name
+    @property
+    def dob(self):
+        return self.__dob
     def input(self):
         self.id = input("ID: ")
         self.name = input("Name: ")
         self.dob = input("Date of birth (dd-MM-YYYY): ")
     def __str__(self):
-        return f"{self.id} | {self.name} | {self.dob}"
+        return f"{self.__id} | {self.__name} | {self.__dob}"
 class Course:
     def __init__(self, id, name):
-        self.id = id
-        self.name = name
+        self.__id = id
+        self.__name = name
     @classmethod
     def empty(cls):
         return cls("", "")
+    @property
+    def id(self):
+        return self.__id
+    @property
+    def name(self):
+        return self.__name
     def input(self):
         self.id = input("ID: ")
         self.name = input("Name: ")
@@ -32,6 +46,7 @@ class SMS: # Student Management System
         self.students = {} # students & courses are now dicts, easier for storing objects
         self.courses = {}
         self.marks = {}
+        # since these dicts are only used in the class itself, encapsulation isn't necessary.
     def input_students(self):
         while True:
             student_amt = int(input("Input amount of students: "))
