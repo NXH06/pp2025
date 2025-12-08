@@ -1,28 +1,36 @@
+# TODO: apply encapsulation everywhere (public/protected/private)
 # functions
 class Student:
-    def __init__(self, id, name, dob):
-        self.id = ""
-        self.name = ""
-        self.dob = ""
+    def __init__(self, id, name, dob): # call this function using class name
+            self.id = id
+            self.name = name
+            self.dob = dob
+    @classmethod
+    def empty(cls):
+        return cls("", "", "")
     def input(self):
-        self.id = input(f"Input ID of student {i + 1}: ") # Avoid zero-indexing while printing
-        self.name = input(f"Input name of student {i + 1}: ")
-        self.dob = input(f"Input date of birth (YYYY-MM-dd) of student {i + 1}: ")
-    def display(self):
-        print(f"{self.id} | {self.name} | {self.dob}")    
+        self.id = input("ID: ")
+        self.name = input("Name: ")
+        self.dob = input("Date of birth (dd-MM-YYYY): ")
+    def __str__(self):
+        return f"{self.id} | {self.name} | {self.dob}"
 class Course:
     def __init__(self, id, name):
         self.id = id
         self.name = name
-class Mark(Student, Course):
-    def __init__(self, s_obj, c_obj, mark):
-        self.s_id = s_obj
-        self.c_id = c_obj
-        self.mark = mark
+    @classmethod
+    def empty(cls):
+        return cls("", "")
+    def input(self):
+        self.id = input("ID: ")
+        self.name = input("Name: ")
+    def __str__(self):
+        return f"{self.id} | {self.name}"
+# A Mark object doesn't seem necessary here.
 class SMS: # Student Management System
     def __init__(self):
-        self.students = []
-        self.courses = []
+        self.students = {} # students & courses are now dicts, easier for storing objects
+        self.courses = {}
         self.marks = {}
     def input_students(self):
         while True:
@@ -31,9 +39,10 @@ class SMS: # Student Management System
                 break
             print("Invalid amount of students!")
         for i in range (student_amt):
-            s = Student()
+            s = Student.empty()
+            print(f"Input information for student {i+1}...")
             s.input()
-            self.students.append(s)
+            self.students[s.id] = s
     def input_courses(self):
         while True:
             course_amt = int(input("Input amount of courses: "))
@@ -41,81 +50,88 @@ class SMS: # Student Management System
                 break
             print("Invalid amount of courses!")
         for i in range (course_amt):
-            c_id = input(f"Input ID of course {i + 1}: ")
-            c_name = input(f"Input name of course {i + 1}: ")
-            new_course = Course(c_id, c_name)
-            self.courses.append(new_course)
-        return courses
-    def init_marks(self): # make 2D table of marks, all filled with placeholder values
-        for s in self.students:
-            s_id = s["id"]
-            marks[s_id] = {}
-            for c in self.courses:
-                c_id = c["id"]
-                Mark.m_dict(s_id, c_id, "x") # placeholder value if the student doesn't have any marks in that course
+            c = Course.empty()
+            print(f"Input information for course {i+1}...")
+            c.input()
+            self.courses[c.id] = c
+    def init_mark(self, c_id, s_id, mark): # student->course->mark order changed compared to practice 1
+        self.marks[c_id][s_id] = mark
+    def init_marks_table(self): # this function modifies self.marks directly instead of returning a init'd marks table
+        self.marks = {}
+        for c in self.courses:
+            self.marks[c] = {}
+            c_id = self.courses[c].id
+            for s in self.students.values():
+                self.init_mark(c_id, s.id, "x")
     def input_marks(self):
-        self.display_courses()
-        if students == [] or courses == []:
+        if self.students == {} or self.courses == {}:
             print("Input students and courses before inputting marks!")
             return
-        if marks == {}:
-            self.init_marks()
+        self.display_courses()
+        if self.marks == {}:
+            self.init_marks_table()
         while True:
             c_id = input("Input course ID to give marks: ")
-            if any(c_id == c["id"] for c in courses): # bool "any" returns True if any element in iterable object is true
+            if c_id in self.courses:
                 break
             print("Course not found!")
-        while True:
-            s_id = input("Input student ID to give marks: ")
-            if any(s_id == s["id"] for s in students):
-                break
-            print("Student not found!")
-        while True:
-            mark = float(input("Input mark: "))
-            if mark >= 0 and mark <= 20:
-                break
-            print("Mark must be in range 0-20!")
-        Marks.m_dict(s_id, c_id, mark)
+        for s in self.students.values():
+            while True:
+                mark = input(f"Input mark for {s.name} ({s.id}): ")
+                if mark == "x":
+                    print("Student skipped.")
+                    break
+                mark = float(mark)
+                if mark >= 0 and mark <= 20:
+                    self.init_mark(c_id, s.id, mark)
+                    break
+                print("Mark must be in range 0-20!")
     def display_students(self):
-        if self.students == []:
-            print("Students display is currently empty.")
+        if self.students == {}:
+            print("Students list is currently empty.")
             return
         print("> Displaying students... ")
         for s in self.students:
-            s.display()
+            print(self.students[s])
     def display_courses(self):
-        if self.courses == []:
-            print("Courses display is currently empty.")
+        if self.courses == {}:
+            print("Courses list is currently empty.")
             return
         print("> Displaying courses... ")
-        for i in range (len(self.courses)):
-            print(self.courses[i])
-    def display_marks(self):
+        for c in self.courses:
+            print(self.courses[c])
+    def display_marks(self): # ohhhhhhhhhhh whatever I'm showing marks for all courses anyway
         if self.marks == {}:
-            print("Marks display is currently empty.")
+            print("Marks list is currently empty.")
             return
-        print("> Displaying marks...")
-        for student in self.marks:
-            print(f"{student}: {marks[student]}")
-
-# Function for a quick sample input (for code testing purposes). Working with command-line only is too slow...
-def testinput():
-    global students, courses, marks
-    if students != [] or courses != []:
-        print("Cannot use sample input since there is already data in [students] or [courses].")
-        return
-    print("> Creating sample input...")
-    students = [Student.s_dict("123", "Hien", "2006-02-24"), Student.s_dict("456", "Khoa", "1980-05-11")]
-    courses = [Course.c_dict("m1", "math"), Course.c_dict("p2", "physics"), Course.c_dict("i3", "informatics")]
-    marks = init_marks()
-    Marks.m_dict("123", "m1", 15.5)
-    Marks.m_dict("123", "p2", 16.0)
-    Marks.m_dict("456", "m1", 14.0)
-    Marks.m_dict("456", "i3", 12.5)
+        print(f"> Displaying marks...")
+        for c in self.marks:
+            c_name = [i.name for i in self.courses.values() if i.id == c]
+            print(f"{c_name}: ")
+            for s in self.marks[c]:
+                s_name = [j.name for j in self.students.values() if j.id == s]
+                print(f"{s_name}: {self.marks[c][s]} | ", end = "")
+            print("") # insert newline between students
+    def testinput(self):
+        if self.students != {} or self.courses != {}:
+            print("Cannot use sample input since there is already data in (students) or (courses).")
+            return
+        print("> Creating sample input...")
+        self.students["123"] = Student("123", "Hien", "24-02-2006")
+        self.students["456"] = Student("456", "Khoa", "11-05-1980")
+        self.courses["m1"] = Course("m1", "math")
+        self.courses["p2"] = Course("p2", "physics")
+        self.courses["i3"] = Course("i3", "informatics")
+        self.init_marks_table()
+        self.init_mark("m1", "123", 15.5)
+        self.init_mark("i3", "123", 17.8)
+        self.init_mark("m1", "456", 14.0)
+        self.init_mark("p2", "456", 12.5)
 # main code
-print("> Student Management Program <")
-print("====== MENU ======")
+manager = SMS()
+print("> Student Management Program [OOP version] <")
 while True:
+    print("====== MENU ======")
     print("1. Input students")
     print("2. Input courses")
     print("3. Input marks")
@@ -124,31 +140,24 @@ while True:
     print("6. Display marks")
     print("7. Create sample input (for quick testing)")
     print("0. Exit program")
-    print("==================")
-    action = int(input("> What would you like to do?: "))
-    # Python doesn't have a built-in switch-case statement :|
+    action = input("> What would you like to do?: ")
     # Note: for actions 7, all displays/dicts are wiped clean and reinit'd. Don't use this if you already used 1, 2 or 3
-    if action == 1:
-        input_students()
-    elif action == 2:
-        input_courses()
-    elif action == 3:
-        input_marks()
-    elif action == 4:
-        display_students()
-    elif action == 5:
-        display_courses()
-    elif action == 6:
-        display_marks()
-    elif action == 7:
-        testinput()
-    elif action == 0:
+    if action == "1":
+        manager.input_students()
+    elif action == "2":
+        manager.input_courses()
+    elif action == "3":
+        manager.input_marks()
+    elif action == "4":
+        manager.display_students()
+    elif action == "5":
+        manager.display_courses()
+    elif action == "6":
+        manager.display_marks()
+    elif action == "7":
+        manager.testinput()
+    elif action == "0":
         break
     else:
         print("Not a valid action. Please try again.")
-    print("==================")
 print("> Program terminated.")
-
-# TODO:
-# Input marks for all students instead of just 1 when selecting a course?
-# When displaying marks, print actual names for students and courses instead of IDs

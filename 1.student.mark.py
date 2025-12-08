@@ -1,4 +1,3 @@
-from prettytable import PrettyTable
 # functions
 def input_students():
     global students
@@ -36,10 +35,10 @@ def init_marks(): # make 2D table of marks, all filled with placeholder values
     return marks
 def input_marks():
     global marks
-    display_courses()
     if students == [] or courses == []:
         print("Input students and courses before inputting marks!")
         return
+    display_courses()
     if marks == {}:
         marks = init_marks()
     while True:
@@ -72,14 +71,18 @@ def display_courses():
     print("> Displaying courses...\n")
     for c in courses:
         print(f"{c["id"]} | {c["name"]}")
-def display_marks():
+def display_marks(): # read the slides again and realized that I was only required to show marks for a given course...
     if marks == {}:
         print("Marks display is currently empty.")
         return
     print("> Displaying marks...\n")
     for s in marks:
         s_name = [i["name"] for i in students if i["id"] == s] # iterate through [students] for matching id, then return name
-        print(f"{s_name}: {marks[s]}")
+        print(f"{s_name}: ")
+        for c in marks[s]:
+            c_name = [j["name"] for j in courses if j["id"] == c]
+            print(f"{c_name}: {marks[s][c]} | ", end = "")
+        print("") # insert newline before printing next student
 # Functions for speeding up work with dictionaries
 def s_dict(id, name, dob):
     return {"id": id, "name": name, "dob": dob}
@@ -117,7 +120,6 @@ while True:
     print("6. Display marks")
     print("7. Create sample input (for quick testing)")
     print("0. Exit program")
-    print("==================")
     action = input("> What would you like to do?: ").strip()
     # Python doesn't have a built-in switch-case statement :|
     # Note: for actions 7, all displays/dicts are wiped clean and reinit'd. Don't use this if you already used 1, 2 or 3
@@ -140,7 +142,3 @@ while True:
     else:
         print("Not a valid action. Please try again.")
 print("> Program terminated.")
-
-# TODO:
-# Input marks for all students instead of just 1 when selecting a course?
-# When displaying marks, print actual names for students and courses instead of IDs
