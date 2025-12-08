@@ -63,19 +63,15 @@ def display_students():
         print("Students display is currently empty.")
         return
     print("> Displaying students...\n")
-    print("ID\t | Name\t\t | Date of birth") # the print command automatically inserts newline at end
-    print("-" * 40) # printing a neat table
     for s in students:
-        print(f"{s["id"]}\t | {s["name"]}\t\t | {s["dob"]}") 
+        print(f"{s["id"]} | {s["name"]} | {s["dob"]}") 
 def display_courses():
     if courses == []:
         print("Courses display is currently empty.")
         return
     print("> Displaying courses...\n")
-    print("ID\t | Name")
-    print("-" * 30)
     for c in courses:
-        print(f"{c["id"]}\t | {c["name"]}")
+        print(f"{c["id"]} | {c["name"]}")
 def display_marks():
     if marks == {}:
         print("Marks display is currently empty.")
@@ -84,18 +80,6 @@ def display_marks():
     for s in marks:
         s_name = [i["name"] for i in students if i["id"] == s] # iterate through [students] for matching id, then return name
         print(f"{s_name}: {marks[s]}")
-    """ Manual method: (just use a table maker library instead)
-    print("Student\t\t", end = "")
-    for c in courses:
-        print(f" | {c["name"]}\t", end = "") 
-    print("\n" + "-" * 50)
-    for s, c in marks.items(): # outer key, inner dict, outer dict
-        s_name = [i["name"] for i in students if i["id"] == s]
-        print(f"{s_name}\t", end = "")
-        for m in c: # inner key, inner dict
-            print(f" | {c[m]}\t", end = "")
-        print("") # insert newline before printing next student
-    """
 # Functions for speeding up work with dictionaries
 def s_dict(id, name, dob):
     return {"id": id, "name": name, "dob": dob}
