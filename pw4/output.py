@@ -1,7 +1,5 @@
 import curses as crs
 import numpy as np
-from domains.student import Student
-from domains.course import Course
 
 class Colors:
     green = 0

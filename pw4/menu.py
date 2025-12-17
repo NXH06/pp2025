@@ -1,6 +1,7 @@
 import curses as crs
 from curses import textpad as txt
-from output_handler import Colors
+from output import Colors
+
 def exit_textbox(key):
     if key == ord("\n"):
         return 7

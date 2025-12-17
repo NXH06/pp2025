@@ -1,9 +1,8 @@
 import curses as crs
-from curses import textpad as txt
 import math
 from domains.student import Student
 from domains.course import Course
-from output_handler import Colors
+from output import Colors
 
 class InputHandler:
     def __init__(self, menu, sms):
@@ -73,7 +72,7 @@ class InputHandler:
         if self.sms.students == {} or self.sms.courses == {}:
             self.stdscr.addstr(y, 0, "Input students and courses before inputting marks!", Colors.yellow)
             return
-        from output_handler import OutputHandler
+        from output import OutputHandler
         output = OutputHandler(self.menu, self.sms)
         output.display_courses(y)
         y += len(self.sms.courses) + 1

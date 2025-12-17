@@ -1,5 +1,5 @@
 import numpy as np
-from output_handler import Colors
+from output import Colors
 
 class SMS: # note: don't import this class anywhere, just init a "sms" object
     def __init__(self, menu):

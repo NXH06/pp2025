@@ -1,8 +1,8 @@
 import curses as crs
 from menu import Menu
 from sms import SMS
-from input_handler import InputHandler
-from output_handler import OutputHandler, Colors
+from input import InputHandler
+from output import OutputHandler, Colors
 
 def main(stdscr):
     menu_items = ["1. Input students",
