@@ -98,11 +98,12 @@ class Menu: # advice: consult files in "cursestests" folder
 class Colors: # so that methods from other classes can display text with these colors
     green = 0
     yellow = 0
-def init_colors():
-    crs.init_pair(1, crs.COLOR_GREEN, crs.COLOR_BLACK)
-    crs.init_pair(2, crs.COLOR_YELLOW, crs.COLOR_BLACK)
-    Colors.green = crs.color_pair(1)
-    Colors.yellow = crs.color_pair(2)
+    @staticmethod
+    def init_colors():
+        crs.init_pair(1, crs.COLOR_GREEN, crs.COLOR_BLACK)
+        crs.init_pair(2, crs.COLOR_YELLOW, crs.COLOR_BLACK)
+        Colors.green = crs.color_pair(1)
+        Colors.yellow = crs.color_pair(2)
 class SMS: # Student Management System
     def __init__(self, menu): # Composition - SMS needs to use methods from Menu, but shouldn't be a subclass of it
         self.students = {}
@@ -311,7 +312,6 @@ class SMS: # Student Management System
         self.calculate_avg_gpa(0) # put input as 0 if there is no chance the method complains about insufficient data
 
 # main code
-
 def main(stdscr):
     menu_items = ["1. Input students",
     "2. Input courses",
@@ -328,7 +328,7 @@ def main(stdscr):
     cols = crs.COLS
     mid_line = lines // 2
     mid_col = cols // 2
-    init_colors()
+    Colors.init_colors()
     while True:
         crs.curs_set(0)
         stdscr.clear()
