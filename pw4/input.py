@@ -83,18 +83,21 @@ class InputHandler:
             c_id = self.get_text_input(y + 3, 1)
             if c_id in self.sms.courses:
                 break
-            print("Course not found!")
+            self.stdscr.addstr(y + 1, 0, "Course not found!", Colors.yellow)
         self.clearline(y)
+        self.clearline(y + 1)
         for s in self.sms.students.values():
             while True:
                 self.clearline(y)
                 self.stdscr.addstr(y, 0, f"Input mark for {s.name} - {s.id}: (\"-\" to skip, \"x\" to clear mark)", crs.A_BOLD)
                 mark = self.get_text_input(y + 3, 1)
                 if mark == "-":
+                    self.clearline(y + 1)
                     self.stdscr.addstr(y + 1, 0, "Student skipped.", Colors.yellow)
                     break
                 elif mark == "x":
                     self.sms.init_mark(c_id, s.id, mark)
+                    self.clearline(y + 1)
                     self.stdscr.addstr(y + 1, 0, "Student's mark cleared.", Colors.yellow)
                     break
                 mark = float(mark)
@@ -104,7 +107,6 @@ class InputHandler:
                     self.clearline(y + 1)
                     self.stdscr.addstr(y + 1, 0, "Student's mark saved.", Colors.yellow)
                     break
-                self.clearline(y + 1)
                 self.stdscr.addstr(y + 1, 0, "Mark must be in range 0-20!", Colors.yellow)
         y -= len(self.sms.courses) + 1
         for i in range(y, y + len(self.sms.courses) + 10):

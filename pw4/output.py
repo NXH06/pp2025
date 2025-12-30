@@ -4,6 +4,7 @@ import numpy as np
 class Colors:
     green = 0
     yellow = 0
+    @staticmethod
     def init_colors():
         crs.init_pair(1, crs.COLOR_GREEN, crs.COLOR_BLACK)
         crs.init_pair(2, crs.COLOR_YELLOW, crs.COLOR_BLACK)
@@ -47,7 +48,7 @@ class OutputHandler:
                 self.stdscr.addstr(f"{s_name}: {self.sms.marks[c][s]} | ")
     def display_avg_gpa(self, y):
         if self.sms.avg_gpa == {}:
-            self.calculate_avg_gpa(y)
+            self.sms.calculate_avg_gpa(y)
             return
         s_list = []
         g_list = []
