@@ -40,7 +40,7 @@ class InputHandler:
         with open("students.txt", "w") as f:
             for s in self.sms.students.values():
                 f.write(f"{s.__str__()}\n")
-        # no need to check for "file doens't exist" exception since "w" mode creates file in that case anyway
+        # no need to check for "file doesn't exist" exception since "w" mode creates file in that case anyway
         for i in range(y, y + 10):
             self.clearline(i)
         self.stdscr.addstr(y, 0, "Students information saved.", crs.A_BOLD)
@@ -117,11 +117,10 @@ class InputHandler:
                 self.stdscr.addstr(y + 1, 0, "Mark must be in range 0-20!", Colors.yellow)
         with open("marks.txt", "w") as f:
             for c in self.sms.marks:
-                c_name = [i.name for i in self.sms.courses.values() if i.id == c]
-                f.write(f"-> {c_name}:\n")
-                for s in self.sms.marks[c]:
-                    s_name = [j.name for j in self.sms.students.values() if j.id == s]
-                    f.write(f"{s_name}: {self.sms.marks[c][s]} | ")
+                for m, i in enumerate(self.sms.marks[c].values()):
+                    f.write(f"{m}")
+                    if i < len(self.sms.marks[c].values()) - 1: # don't write pipe after last mark of course
+                        f.write(" | ")
                 f.write("\n")
         y -= len(self.sms.courses) + 1
         for i in range(y, y + len(self.sms.courses) + 10):
@@ -159,9 +158,41 @@ class InputHandler:
                 f.write(f"{c.__str__()}\n")
         with open("marks.txt", "w") as f:
             for c in self.sms.marks:
-                c_name = [i.name for i in self.sms.courses.values() if i.id == c]
-                f.write(f"-> {c_name}:\n")
-                for s in self.sms.marks[c]:
-                    s_name = [j.name for j in self.sms.students.values() if j.id == s]
-                    f.write(f"{s_name}: {self.sms.marks[c][s]} | ")
+                for m, i in enumerate(self.sms.marks[c].values()):
+                    f.write(f"{m}")
+                    if i < len(self.sms.marks[c].values()) - 1:
+                        f.write(" | ")
                 f.write("\n")
+    def read_from_file(self):
+        try:
+            with open("students.txt", "r") as f:
+                while True:
+                    line = f.readline()
+                    if line == "": # end of file
+                        break
+                    s = line.split(" | ")
+                    for i in s:
+                        i = i.strip()
+                    self.sms.students[s[0]] = Student(s[0], s[1], s[2])
+            with open("courses.txt", "r") as f:
+                while True:
+                    line = f.readline()
+                    if line == "": # end of file
+                        break
+                    c = line.split(" | ")
+                    for i in c:
+                        i = i.strip()
+                    self.sms.courses[c[0]] = Course(c[0], c[1], int(c[2])) # amount of credits is an integer
+            with open("marks.txt", "r") as f:
+                self.sms.init_marks_table()
+                for c in self.sms.courses:
+                    line = f.readline()
+                    line = line.split(" | ")
+                    for m, s in zip(line, self.sms.students):
+                        m = m.strip()
+                        if m != "x":
+                            m = float(m)
+                        self.sms.marks[c][s] = m
+        except IOError:
+            self.stdscr.addstr(1, 0, "Input files missing! Stopping extraction...", Colors.yellow)
+            self.stdscr.refresh()

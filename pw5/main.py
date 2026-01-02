@@ -26,10 +26,11 @@ def main(stdscr):
     mid_col = cols // 2
     Colors.init_colors()
     if exists("students.dat"):
-        stdscr.addstr(0, 0, "File students.dat found, extracting information...", Colors.green)
+        stdscr.addstr(0, 0, "File students.dat found, extracting data...", Colors.green)
         stdscr.refresh()
         with zf.ZipFile("students.dat", "r") as zipf:
             zipf.extractall()
+        input.read_from_file()
         crs.napms(250)
     while True:
         crs.curs_set(0)
@@ -60,7 +61,7 @@ def main(stdscr):
             input.testinput(linepos)
         elif action == ord("0"):
             menu.clearline(linepos)
-            stdscr.addstr(linepos, 0, "Compressing and saving information...", Colors.green)
+            stdscr.addstr(linepos, 0, "Compressing and saving data...", Colors.green)
             stdscr.refresh()
             with zf.ZipFile("students.dat", "w") as zipf:
                 try:
@@ -73,7 +74,7 @@ def main(stdscr):
                     crs.napms(250)
                     break
                 except IOError:
-                    stdscr.addstr(linepos + 1, 0, "Output file(s) not found! Quit anyway? (press y if yes) ", Colors.yellow)
+                    stdscr.addstr(linepos + 1, 0, "Output file(s) missing! Quit anyway? (press y if yes) ", Colors.yellow)
                     stdscr.refresh()
                     crs.curs_set(0)
                     key = stdscr.getch()
@@ -89,10 +90,8 @@ def main(stdscr):
         stdscr.getch()
     stdscr.clear()
     temp_message = "Terminating program..."
-    for i in range(3, 8):
-        stdscr.addstr(i, mid_col - len(temp_message) // 2, temp_message, Colors.green)
-        stdscr.refresh()
-        crs.napms(50)
+    stdscr.addstr(5, mid_col - len(temp_message) // 2, temp_message, Colors.green)
+    stdscr.refresh()
     crs.napms(250)
     # and then the program terminates!
 
