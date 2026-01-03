@@ -38,7 +38,7 @@ class Course:
         self.__credits = credits
     @classmethod
     def empty(cls):
-        return cls("", "")
+        return cls("", "", "")
     @property
     def id(self):
         return self.__id
