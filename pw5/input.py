@@ -117,9 +117,9 @@ class InputHandler:
                 self.stdscr.addstr(y + 1, 0, "Mark must be in range 0-20!", Colors.yellow)
         with open("marks.txt", "w") as f:
             for c in self.sms.marks:
-                for m, i in enumerate(self.sms.marks[c].values()):
+                for i, m in enumerate(self.sms.marks[c].values()): # when enumerate over dict, index goes before value
                     f.write(f"{m}")
-                    if i < len(self.sms.marks[c].values()) - 1: # don't write pipe after last mark of course
+                    if int(i) < len(self.sms.students) - 1: # don't write pipe at last student's mark
                         f.write(" | ")
                 f.write("\n")
         y -= len(self.sms.courses) + 1
@@ -158,9 +158,9 @@ class InputHandler:
                 f.write(f"{c.__str__()}\n")
         with open("marks.txt", "w") as f:
             for c in self.sms.marks:
-                for m, i in enumerate(self.sms.marks[c].values()):
+                for i, m in enumerate(self.sms.marks[c].values()):
                     f.write(f"{m}")
-                    if i < len(self.sms.marks[c].values()) - 1:
+                    if int(i) < len(self.sms.students) - 1:
                         f.write(" | ")
                 f.write("\n")
     def read_from_file(self):

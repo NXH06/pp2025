@@ -5,7 +5,7 @@ from input import InputHandler
 from output import OutputHandler, Colors
 import zipfile as zf
 import os
-from os.path import exists
+from pathlib import Path
 def main(stdscr):
     menu_items = ["1. Input students",
     "2. Input courses",
@@ -25,7 +25,8 @@ def main(stdscr):
     mid_line = lines // 2
     mid_col = cols // 2
     Colors.init_colors()
-    if exists("students.dat"):
+    zipdata = Path("students.dat")
+    if zipdata.exists():
         stdscr.addstr(0, 0, "File students.dat found, extracting data...", Colors.green)
         stdscr.refresh()
         with zf.ZipFile("students.dat", "r") as zipf:
