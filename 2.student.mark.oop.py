@@ -1,9 +1,9 @@
 # functions
 class Student:
     def __init__(self, id, name, dob): # call this function using class name
-            self.__id = id
-            self.__name = name
-            self.__dob = dob
+        self.__id = id
+        self.__name = name
+        self.__dob = dob
     @classmethod
     def empty(cls):
         return cls("", "", "")
@@ -17,9 +17,9 @@ class Student:
     def dob(self):
         return self.__dob
     def input(self):
-        self.id = input("ID: ")
-        self.name = input("Name: ")
-        self.dob = input("Date of birth (dd-MM-YYYY): ")
+        self.__id = input("ID: ")
+        self.__name = input("Name: ")
+        self.__dob = input("Date of birth (dd-MM-YYYY): ")
     def __str__(self):
         return f"{self.__id} | {self.__name} | {self.__dob}"
 class Course:
@@ -36,8 +36,8 @@ class Course:
     def name(self):
         return self.__name
     def input(self):
-        self.id = input("ID: ")
-        self.name = input("Name: ")
+        self.__id = input("ID: ")
+        self.__name = input("Name: ")
     def __str__(self):
         return f"{self.id} | {self.name}"
 # A Mark object doesn't seem necessary here.

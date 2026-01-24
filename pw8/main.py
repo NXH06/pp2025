@@ -70,7 +70,7 @@ def main(stdscr):
             with zf.ZipFile("students.dat", "w") as zipf:
                 sms.save_students()
                 sms.save_courses()
-                sms.save_students()
+                sms.save_marks()
                 zipf.write("students.txt")
                 zipf.write("courses.txt")
                 zipf.write("marks.txt")

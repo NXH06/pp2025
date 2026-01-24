@@ -1,8 +1,8 @@
 class Student:
     def __init__(self, id, name, dob):
-            self.__id = id
-            self.__name = name
-            self.__dob = dob
+        self.__id = id
+        self.__name = name
+        self.__dob = dob
     @classmethod
     def empty(cls):
         return cls("", "", "")
